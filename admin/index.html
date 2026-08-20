@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KPEA Admin</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+  .admin-section { background: var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:20px; }
+  table { width:100%; border-collapse: collapse; margin-top:10px; }
+  th, td { text-align:left; padding:8px; border-bottom:1px solid var(--border); font-size:0.9rem; }
+  input, select { padding:8px; border-radius:6px; border:1px solid var(--border); background:var(--bg-alt); color:var(--text); margin:4px 4px 4px 0; }
+</style>
+</head>
+<body>
+
+<header class="hero" style="padding:30px 20px;">
+  <span class="tagline">2060 Is Here</span>
+  <h1 style="font-size:1.8rem;">KPEA Admin</h1>
+</header>
+
+<div class="container">
+
+  <div id="login-box" class="admin-section">
+    <h3>Admin Login</h3>
+    <input type="email" id="login-email" placeholder="Email" />
+    <input type="password" id="login-password" placeholder="Password" />
+    <button class="btn gold" style="width:auto;" onclick="login()">Login</button>
+    <p id="login-error" style="color:var(--red); margin-top:8px;"></p>
+  </div>
+
+  <div id="admin-panel" style="display:none;">
+
+    <div class="admin-section">
+      <h3>Voting Status</h3>
+      <p id="voting-status-text">Loading…</p>
+      <button class="btn" style="width:auto;" onclick="toggleVoting(true)">Open Voting</button>
+      <button class="btn" style="width:auto;background:#333;" onclick="toggleVoting(false)">Close Voting</button>
+    </div>
+
+    <div class="admin-section">
+      <h3>Revenue</h3>
+      <p id="revenue-text">Loading…</p>
+    </div>
+
+    <div class="admin-section">
+      <h3>Categories</h3>
+      <input id="new-cat-name" placeholder="Category name" />
+      <input id="new-cat-slug" placeholder="slug-like-this" />
+      <button class="btn" style="width:auto;" onclick="addCategory()">Add Category</button>
+      <table id="categories-table"><thead><tr><th>Name</th><th>Slug</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="admin-section">
+      <h3>Nominees</h3>
+      <select id="nominee-category"></select>
+      <input id="new-nominee-name" placeholder="Full name" />
+      <input id="new-nominee-photo" placeholder="Photo URL (optional)" />
+      <button class="btn" style="width:auto;" onclick="addNominee()">Add Nominee</button>
+      <table id="nominees-table"><thead><tr><th>Name</th><th>Category</th><th>Votes</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="admin-section">
+      <h3>All Votes / Payments</h3>
+      <button class="btn" style="width:auto;" onclick="exportVotesCSV()">Export CSV</button>
+      <table id="votes-table"><thead><tr><th>Nominee</th><th>Category</th><th>Phone</th><th>Votes</th><th>Amount</th><th>Status</th><th>Time</th></tr></thead><tbody></tbody></table>
+    </div>
+
+  </div>
+</div>
+
+<script src="../js/config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
