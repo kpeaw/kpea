@@ -23,7 +23,7 @@ async function loadCategories() {
       `
       <div class="category-card" style="border-color:var(--gold);" onclick="openApplyModal()">
         <h3>Apply as a Nominee</h3>
-        <p>Tap to submit your application (KSh 500)</p>
+        <p>Tap to submit your application</p>
       </div>
     `;
   } catch (err) {
