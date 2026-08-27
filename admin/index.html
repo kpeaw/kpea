@@ -57,7 +57,13 @@
       <input id="new-nominee-name" placeholder="Full name" />
       <input id="new-nominee-photo" placeholder="Photo URL (optional)" />
       <button class="btn" style="width:auto;" onclick="addNominee()">Add Nominee</button>
-      <table id="nominees-table"><thead><tr><th>Name</th><th>Category</th><th>Votes</th><th></th></tr></thead><tbody></tbody></table>
+      <table id="nominees-table"><thead><tr><th>Name</th><th>Category</th><th>Votes</th><th>Manual Adjust</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <div class="admin-section">
+      <h3>Nomination Applications</h3>
+      <p style="color:var(--text-dim); font-size:0.85rem;">Applicants pay KSh 500 to apply. Accept to auto-create them as a nominee, or reject.</p>
+      <table id="applications-table"><thead><tr><th>Name</th><th>Category</th><th>Facebook</th><th>Email</th><th>WhatsApp</th><th>Payment</th><th>Review</th><th></th></tr></thead><tbody></tbody></table>
     </div>
 
     <div class="admin-section">

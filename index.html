@@ -21,13 +21,36 @@
   </div>
 </div>
 
+<div id="apply-modal" class="modal-overlay" style="display:none;">
+  <div class="modal">
+    <h3>Apply for Nomination</h3>
+    <label>Category</label>
+    <select id="apply-category"></select>
+    <label>Full name</label>
+    <input type="text" id="apply-fullname" placeholder="Your full name" />
+    <label>Facebook profile/page link</label>
+    <input type="text" id="apply-facebook" placeholder="https://facebook.com/yourname" />
+    <label>Email (optional)</label>
+    <input type="email" id="apply-email" placeholder="you@example.com" />
+    <label>WhatsApp number</label>
+    <input type="tel" id="apply-whatsapp" placeholder="0712345678" />
+    <label>M-Pesa number (for STK push)</label>
+    <input type="tel" id="apply-mpesa" placeholder="0712345678" />
+    <p class="total">Application fee: KSh 500</p>
+    <button class="btn gold" id="apply-submit-btn" onclick="submitApplication()">Send STK Push</button>
+    <button class="btn" style="background:#333" onclick="closeApplyModal()">Cancel</button>
+    <p id="apply-status-msg" class="status-msg"></p>
+  </div>
+</div>
+
 <footer>
-  &copy; <span id="year"></span> KPEA — Kenya Political Excellence Award.
+  &copy; <span id="year"></span> KPEA — Kenya Political Excellence Award. KSh 20 per vote, via M-Pesa.
   <br /><a href="results.html" style="color:var(--gold)">View live results</a>
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="js/config.js"></script>
 <script src="js/app.js"></script>
+<script src="js/apply.js"></script>
 </body>
 </html>

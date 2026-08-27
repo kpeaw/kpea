@@ -34,6 +34,7 @@ function showAdminPanel() {
   loadRevenue();
   loadCategories();
   loadVotes();
+  loadApplications();
 }
 
 async function loadVotingStatus() {
@@ -106,10 +107,38 @@ async function loadNominees() {
         <td>${n.full_name}</td>
         <td>${catMap[n.category_id] || ''}</td>
         <td>${n.votes_count || 0}</td>
+        <td>
+          <input type="number" id="adjust-${n.id}" placeholder="\u00b1 votes" style="width:80px;" />
+          <button class="btn" style="width:auto;" onclick="addManualVotes('${n.id}')">Apply</button>
+        </td>
         <td><button class="btn" style="width:auto;background:var(--red)" onclick="deleteNominee('${n.id}')">Delete</button></td>
       </tr>`
     )
     .join('');
+}
+
+async function addManualVotes(nomineeId) {
+  const input = document.getElementById(`adjust-${nomineeId}`);
+  const votes = parseInt(input.value, 10);
+  if (!votes || votes === 0) return alert('Enter a non-zero number (e.g. 5 to add, -3 to remove)');
+
+  const note = prompt('Optional note for this manual adjustment (e.g. "failed STK, phone 07XX"):', '') || '';
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/nominees/${nomineeId}/add-votes`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ votes, note }),
+    });
+    const data = await res.json();
+    if (!res.ok) return alert(data.error || 'Failed to adjust votes');
+
+    input.value = '';
+    loadNominees();
+    loadVotes();
+  } catch (err) {
+    alert('Network error while adjusting votes');
+  }
 }
 
 async function addNominee() {
@@ -171,6 +200,56 @@ function exportVotesCSV() {
   a.href = url;
   a.download = `kpea-votes-${Date.now()}.csv`;
   a.click();
+}
+
+async function loadApplications() {
+  const res = await fetch(`${API_BASE}/admin/applications`, { headers: authHeaders() });
+  const applications = await res.json();
+
+  const tbody = document.querySelector('#applications-table tbody');
+  tbody.innerHTML = applications
+    .map((a) => {
+      const canReview = a.payment_status === 'success' && a.review_status === 'pending';
+      const actions = canReview
+        ? `<button class="btn" style="width:auto;" onclick="reviewApplication('${a.id}','accept')">Accept</button>
+           <button class="btn" style="width:auto;background:var(--red)" onclick="reviewApplication('${a.id}','reject')">Reject</button>`
+        : '';
+      return `<tr>
+        <td>${a.full_name}</td>
+        <td>${a.categories?.name || ''}</td>
+        <td>${a.facebook_url ? `<a href="${a.facebook_url}" target="_blank" style="color:var(--gold)">link</a>` : '—'}</td>
+        <td>${a.email || '—'}</td>
+        <td>${a.whatsapp}</td>
+        <td>${a.payment_status}</td>
+        <td>${a.review_status}</td>
+        <td>${actions}</td>
+      </tr>`;
+    })
+    .join('');
+}
+
+async function reviewApplication(id, action) {
+  let note = '';
+  if (action === 'reject') {
+    note = prompt('Optional reason for rejecting (shown only in admin records):', '') || '';
+  } else {
+    if (!confirm('Accept this application and add them as a nominee?')) return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/applications/${id}/${action}`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ note }),
+    });
+    const data = await res.json();
+    if (!res.ok) return alert(data.error || `Failed to ${action} application`);
+
+    loadApplications();
+    if (action === 'accept') loadNominees();
+  } catch (err) {
+    alert('Network error while reviewing application');
+  }
 }
 
 if (token) showAdminPanel();

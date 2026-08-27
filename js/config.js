@@ -1,2 +1,2 @@
-// Update this once the backend is deployed on Render
+// Live KPEA backend on Render
 const API_BASE = 'https://backend-rhxq.onrender.com/api';
