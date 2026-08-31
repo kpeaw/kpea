@@ -27,7 +27,7 @@ async function loadCategories() {
       </div>
       <div class="category-card" style="border-color:var(--gold);" onclick="openSupportModal()">
         <h3>Support KPEA — Buy a Coffee</h3>
-        <p>KSh 100 per cup, via M-Pesa</p>
+        <p>Getting bigger and better</p>
       </div>
     `;
   } catch (err) {
