@@ -25,6 +25,10 @@ async function loadCategories() {
         <h3>Apply as a Nominee</h3>
         <p>Tap to submit your application</p>
       </div>
+      <div class="category-card" style="border-color:var(--gold);" onclick="openSupportModal()">
+        <h3>Support KPEA — Buy a Coffee</h3>
+        <p>KSh 100 per cup, via M-Pesa</p>
+      </div>
     `;
   } catch (err) {
     el.innerHTML = '<p style="color:var(--red)">Could not load categories. Please refresh.</p>';
