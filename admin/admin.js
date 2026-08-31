@@ -54,6 +54,7 @@ function showAdminPanel() {
   loadCategories();
   loadVotes();
   loadApplications();
+  loadSupport();
 }
 
 async function loadVotingStatus() {
@@ -77,7 +78,8 @@ async function loadRevenue() {
     const res = await authFetch(`${API_BASE}/admin/revenue`);
     const data = await res.json();
     document.getElementById('revenue-text').textContent =
-      `KSh ${data.total_revenue_ksh || 0} from ${data.successful_votes || 0} successful vote payments`;
+      `KSh ${data.total_revenue_ksh || 0} total \u2014 KSh ${data.vote_revenue_ksh || 0} from ${data.successful_votes || 0} votes, ` +
+      `KSh ${data.coffee_revenue_ksh || 0} from ${data.successful_coffee_orders || 0} coffee orders`;
   } catch (err) {}
 }
 
@@ -280,6 +282,27 @@ async function reviewApplication(id, action) {
   } catch (err) {
     if (err.message !== 'Session expired') alert('Network error while reviewing application');
   }
+}
+
+async function loadSupport() {
+  try {
+    const res = await authFetch(`${API_BASE}/admin/support`);
+    const support = await res.json();
+
+    const tbody = document.querySelector('#support-table tbody');
+    tbody.innerHTML = support
+      .map(
+        (s) => `<tr>
+          <td>${s.supporter_name || 'Anonymous'}</td>
+          <td>${s.phone}</td>
+          <td>${s.cups}</td>
+          <td>KSh ${s.amount}</td>
+          <td>${s.status}</td>
+          <td>${new Date(s.created_at).toLocaleString()}</td>
+        </tr>`
+      )
+      .join('');
+  } catch (err) {}
 }
 
 if (token) showAdminPanel();
