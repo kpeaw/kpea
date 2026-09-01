@@ -64,6 +64,11 @@ async function loadVotingStatus() {
 }
 
 async function toggleVoting(open) {
+  if (!open) {
+    if (!confirm('Are you sure you want to CLOSE voting? Voters will not be able to cast votes until you reopen it.')) {
+      return;
+    }
+  }
   try {
     await authFetch(`${API_BASE}/admin/settings/voting-status`, {
       method: 'PUT',
