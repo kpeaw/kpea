@@ -38,6 +38,13 @@
       <p id="voting-status-text">Loading…</p>
       <button class="btn" style="width:auto;" onclick="toggleVoting(true)">Open Voting</button>
       <button class="btn" style="width:auto;background:#333;" onclick="toggleVoting(false)">Close Voting</button>
+
+      <h3 style="margin-top:20px;">Voting Deadline (Countdown)</h3>
+      <p style="color:var(--text-dim); font-size:0.85rem;">Sets the Days/Hours/Minutes/Seconds countdown shown live on the homepage.</p>
+      <input type="datetime-local" id="deadline-input" />
+      <button class="btn" style="width:auto;" onclick="saveDeadline()">Save Deadline</button>
+      <button class="btn" style="width:auto;background:#333;" onclick="clearDeadline()">Clear Countdown</button>
+      <p id="deadline-status" style="color:var(--text-dim); font-size:0.85rem; margin-top:8px;"></p>
     </div>
 
     <div class="admin-section">

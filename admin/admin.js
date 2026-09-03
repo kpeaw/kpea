@@ -50,6 +50,7 @@ function showAdminPanel() {
   document.getElementById('login-box').style.display = 'none';
   document.getElementById('admin-panel').style.display = 'block';
   loadVotingStatus();
+  loadDeadline();
   loadRevenue();
   loadCategories();
   loadVotes();
@@ -76,6 +77,59 @@ async function toggleVoting(open) {
     });
     loadVotingStatus();
   } catch (err) {}
+}
+
+// Convert an ISO datetime string to the value a <input type="datetime-local"> expects (local time, no seconds/Z)
+function isoToLocalInputValue(iso) {
+  const d = new Date(iso);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+async function loadDeadline() {
+  try {
+    const res = await fetch(`${API_BASE}/settings/voting-deadline`);
+    const data = await res.json();
+    const input = document.getElementById('deadline-input');
+    const status = document.getElementById('deadline-status');
+
+    if (data.deadline) {
+      input.value = isoToLocalInputValue(data.deadline);
+      status.textContent = `Countdown live on homepage, ending ${new Date(data.deadline).toLocaleString()}`;
+    } else {
+      status.textContent = 'No deadline set — countdown is hidden on the homepage.';
+    }
+  } catch (err) {}
+}
+
+async function saveDeadline() {
+  const value = document.getElementById('deadline-input').value;
+  if (!value) return alert('Pick a date and time first');
+
+  const iso = new Date(value).toISOString();
+  try {
+    await authFetch(`${API_BASE}/admin/settings/voting-deadline`, {
+      method: 'PUT',
+      body: JSON.stringify({ deadline: iso }),
+    });
+    loadDeadline();
+  } catch (err) {
+    if (err.message !== 'Session expired') alert('Failed to save deadline');
+  }
+}
+
+async function clearDeadline() {
+  if (!confirm('Remove the countdown from the homepage?')) return;
+  try {
+    await authFetch(`${API_BASE}/admin/settings/voting-deadline`, {
+      method: 'PUT',
+      body: JSON.stringify({ deadline: null }),
+    });
+    document.getElementById('deadline-input').value = '';
+    loadDeadline();
+  } catch (err) {
+    if (err.message !== 'Session expired') alert('Failed to clear deadline');
+  }
 }
 
 async function loadRevenue() {
